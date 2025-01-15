@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --CharcoalBlack: #222831;
+  --Gunmetal: #393e46;
+  --TropicalBlue: #00adb5;
+  --LightGray: #eeeeee;
+
+  --Success: #22c55e;
+  --Warning: #f97316;
+  --Error: #ef4444;
+}
+body {
+  background-color: var(--CharcoalBlack);
+  font-family: "Cairo", serif;
+}

@@ -1,7 +1,48 @@
 <script setup></script>
 
 <template>
-  <h1 class="text-3xl font-bold text-red-500 underline">Hello world!</h1>
+  <header>
+    <div class="container">
+      <div class="logo flex items-center">
+        <img
+          class="w-[5.75rem]"
+          src="./assets/1_TOGHpRhMF0wGXhsrCga94w-removebg-preview.png"
+          alt=""
+        />
+        <img
+          class="w-[3.75rem]"
+          src="./assets/logo-logomark-removebg-preview.png"
+          alt=""
+        />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          aria-hidden="true"
+          role="img"
+          class="iconify iconify--logos"
+          width="37.07"
+          height="36"
+          preserveAspectRatio="xMidYMid meet"
+          viewBox="0 0 256 198"
+        >
+          <path
+            fill="#41B883"
+            d="M204.8 0H256L128 220.8L0 0h97.92L128 51.2L157.44 0h47.36Z"
+          ></path>
+          <path
+            fill="#41B883"
+            d="m0 0l128 220.8L256 0h-51.2L128 132.48L50.56 0H0Z"
+          ></path>
+          <path
+            fill="#35495E"
+            d="M50.56 0L128 133.12L204.8 0h-47.36L128 51.2L97.92 0H50.56Z"
+          ></path>
+        </svg>
+      </div>
+    </div>
+  </header>
+  <main></main>
+  <footer></footer>
 </template>
 
 <style scoped></style>
