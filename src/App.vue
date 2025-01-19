@@ -1,47 +1,69 @@
-<script setup></script>
+<script setup>
+import { ref } from "vue";
+import { app } from "./firebase";
+import { getAuth } from "firebase/auth";
+import AddNewTask from "./components/AddNewTask.vue";
+const auth = getAuth(app);
+console.log(auth.currentUser);
+const isDark = ref(false);
+const showAddNewTask = ref(false);
+const pageTheme = () => {
+  const courantTheme = document.querySelector(`html`);
+  if (courantTheme.getAttribute(`data-theme`) === `light`) {
+    courantTheme.setAttribute(`data-theme`, `dark`);
+  } else {
+    courantTheme.setAttribute(`data-theme`, `light`);
+  }
+  isDark.value = !isDark.value;
+};
+const showMoreSettings = ref(false);
+</script>
 
 <template>
   <header>
     <div class="container">
-      <div class="logo flex items-center">
-        <img
-          class="w-[5.75rem]"
-          src="./assets/1_TOGHpRhMF0wGXhsrCga94w-removebg-preview.png"
-          alt=""
-        />
-        <img
-          class="w-[3.75rem]"
-          src="./assets/logo-logomark-removebg-preview.png"
-          alt=""
-        />
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
-          aria-hidden="true"
-          role="img"
-          class="iconify iconify--logos"
-          width="37.07"
-          height="36"
-          preserveAspectRatio="xMidYMid meet"
-          viewBox="0 0 256 198"
-        >
-          <path
-            fill="#41B883"
-            d="M204.8 0H256L128 220.8L0 0h97.92L128 51.2L157.44 0h47.36Z"
-          ></path>
-          <path
-            fill="#41B883"
-            d="m0 0l128 220.8L256 0h-51.2L128 132.48L50.56 0H0Z"
-          ></path>
-          <path
-            fill="#35495E"
-            d="M50.56 0L128 133.12L204.8 0h-47.36L128 51.2L97.92 0H50.56Z"
-          ></path>
-        </svg>
-      </div>
+      <h1
+        class="text-[clamp(1.5rem,10vh,3rem)] font-bold text-[var(--color-text)] bg-[var(--color-secondary-background)] text-center"
+      >
+        ToDo List
+      </h1>
     </div>
   </header>
-  <main></main>
+  <main>
+    <div class="container h-[100vh] relative">
+      <div class="absolute top-[50vh] flex flex-col h-[10.8rem] justify-end">
+        <button
+          aria-label="add a Task"
+          v-show="showMoreSettings"
+          @click="showAddNewTask = true"
+          class="bg-[#ddd] p-3 mb-3 rounded-full"
+        >
+          <font-awesome-icon :icon="['fas', 'plus']" />
+        </button>
+        <button
+          v-show="showMoreSettings"
+          @click="pageTheme"
+          class="bg-[#ddd] p-3 rounded-full mb-3"
+        >
+          <font-awesome-icon v-if="!isDark" :icon="['fa', 'sun']" />
+          <font-awesome-icon v-else :icon="['fa', 'moon']" />
+        </button>
+        <button
+          @click="showMoreSettings = !showMoreSettings"
+          class="bg-[#ddd] p-3 rounded-full"
+        >
+          <font-awesome-icon class="text-[1.5rem]" icon="gear" />
+        </button>
+      </div>
+    </div>
+    <div
+      v-if="showAddNewTask"
+      @click.self="showAddNewTask = !showAddNewTask"
+      class="bg-[#00000075] p-4 absolute w-full h-full top-0 left-0 flex items-center justify-center"
+    >
+      <AddNewTask></AddNewTask>
+    </div>
+  </main>
   <footer></footer>
 </template>
 
