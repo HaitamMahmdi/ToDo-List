@@ -10,11 +10,13 @@ import {
   faMoon,
   faPlus,
   faGear,
+  faXmark,
+  faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 // Add the icons to the library
-library.add(faCamera, faHeart, faSun, faMoon, faPlus, faGear);
+library.add(faCamera, faHeart, faSun, faMoon, faPlus, faGear, faXmark, faCheck);
 
 import "./style.css";
 

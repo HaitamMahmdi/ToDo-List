@@ -1,7 +1,29 @@
 <script setup>
 import { ref } from "vue";
-
+import { app } from "../firebase";
+import { getAuth } from "firebase/auth";
+import { getDoc, getFirestore, doc } from "firebase/firestore";
+const auth = getAuth(app);
+const user = auth.currentUser;
 const isChecked = ref(false);
+const db = getFirestore(app);
+
+async function addNewTask() {
+  const docRef = doc(db, `Users`, `User-${user.uid}`);
+  try {
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      // المستند موجود: طباعة البيانات
+      console.log(docSnap.data().Tasks);
+    } else {
+      // إذا لم يكن المستند موجودًا
+      console.log("No such document!");
+    }
+  } catch (error) {
+    console.error("Error fetching document:", error);
+  }
+}
+addNewTask();
 </script>
 <template>
   <form @submit.prevent class="flex flex-col">
@@ -16,7 +38,7 @@ const isChecked = ref(false);
       class="font-bold text-xl mt-4 mb-1 text-[var(--color-text)]"
       >Task decription</label
     >
-    <textarea class="rounded-lg" name="" id="decription"></textarea>
+    <textarea class="rounded-lg p-3" name="" id="decription"></textarea>
     <div class="mt-4">
       <label for="TimeLimit" class="font-bold mr-3 text-[var(--color-text)]"
         >Add Time Limit ?</label
