@@ -1,29 +1,39 @@
 <script setup>
-import { ref } from "vue";
-import { app } from "../firebase";
+import { reactive, ref } from "vue";
+import { app ,db} from "../firebase";
 import { getAuth } from "firebase/auth";
-import { getDoc, getFirestore, doc } from "firebase/firestore";
+import {
+  getDoc,
+  doc,
+  updateDoc,
+  arrayUnion,
+} from "firebase/firestore";
 const auth = getAuth(app);
 const user = auth.currentUser;
 const isChecked = ref(false);
-const db = getFirestore(app);
+const task = reactive({
+  taskTitle: ``,
+  taskDescription: ``,
+  time: ``,
+});
 
 async function addNewTask() {
   const docRef = doc(db, `Users`, `User-${user.uid}`);
   try {
     const docSnap = await getDoc(docRef);
+
     if (docSnap.exists()) {
-      // المستند موجود: طباعة البيانات
-      console.log(docSnap.data().Tasks);
+      await updateDoc(docRef, {
+        Tasks: arrayUnion(task),
+      });
+      console.log("Task added successfully!");
     } else {
-      // إذا لم يكن المستند موجودًا
-      console.log("No such document!");
+      console.log("Document does not exist. Consider creating it.");
     }
   } catch (error) {
-    console.error("Error fetching document:", error);
+    console.error("Error fetching or updating document:", error);
   }
 }
-addNewTask();
 </script>
 <template>
   <form @submit.prevent class="flex flex-col">
@@ -32,13 +42,23 @@ addNewTask();
       class="font-bold mb-1 text-xl text-[var(--color-text)]"
       >Task Title</label
     >
-    <input class="rounded-lg w-[25rem] p-3" id="taskTitle" type="text" />
+    <input
+      v-model="task.taskTitle"
+      class="rounded-lg w-[25rem] p-3"
+      id="taskTitle"
+      type="text"
+    />
     <label
-      for="decription"
+      for="description"
       class="font-bold text-xl mt-4 mb-1 text-[var(--color-text)]"
       >Task decription</label
     >
-    <textarea class="rounded-lg p-3" name="" id="decription"></textarea>
+    <textarea
+      v-model="task.taskDescription"
+      class="rounded-lg p-3"
+      name=""
+      id="description"
+    ></textarea>
     <div class="mt-4">
       <label for="TimeLimit" class="font-bold mr-3 text-[var(--color-text)]"
         >Add Time Limit ?</label
@@ -54,12 +74,19 @@ addNewTask();
     <input
       class="p-2 mt-2"
       v-if="isChecked"
+      v-model="task.time"
       type="datetime-local"
       id="meeting-time"
       name="meeting-time"
       value="2024-06-07T00:00"
       min="2024-06-07T00:00"
       max="2025-06-14T00:00"
+    />
+    <input
+      @click="addNewTask"
+      type="submit"
+      value="Add New Task"
+      class="bg-[var(--color-accent)] text-white font-bold text-2xl w-[80%] p-4 mx-auto mt-3 rounded-lg"
     />
   </form>
 </template>

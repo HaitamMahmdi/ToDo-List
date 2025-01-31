@@ -1,14 +1,16 @@
 <script setup>
 import { ref } from "vue";
-import { app } from "./firebase";
+import { app, db } from "./firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { onSnapshot, doc } from "firebase/firestore";
 import AddNewTask from "./components/AddNewTask.vue";
 import TaskCom from "./components/TaskCom.vue";
 import LogIn from "./components/LogIn.vue";
 const auth = getAuth(app);
-const currentUser = ref(null);
 const isDark = ref(false);
 const showAddNewTask = ref(false);
+const currentUser = ref(null);
+const tasks = ref(null);
 const pageTheme = () => {
   const courantTheme = document.querySelector(`html`);
   if (courantTheme.getAttribute(`data-theme`) === `light`) {
@@ -21,8 +23,13 @@ const pageTheme = () => {
 const showMoreSettings = ref(false);
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    currentUser.value = user;
+    currentUser.value = user.uid;
     console.log("User is logged in:", user);
+    const docRef = doc(db, `Users`, `User-${currentUser.value}`);
+    console.log(currentUser.value);
+    onSnapshot(docRef, (docSnap) => {
+      tasks.value = docSnap.data();
+    });
   } else {
     currentUser.value = null;
     console.log("User is not logged in");
@@ -68,8 +75,12 @@ onAuthStateChanged(auth, (user) => {
             <font-awesome-icon class="text-[1.5rem]" icon="gear" />
           </button>
         </div>
-        <div class="mt-[15rem]">
-          <TaskCom :taskName="'new1'" :time="'12'"></TaskCom>
+        <div v-if="tasks" class="mt-[15rem]">
+          <TaskCom
+            v-for="task in tasks.Tasks"
+            :taskName="task.taskTitle"
+            :time="task.time"
+          ></TaskCom>
         </div>
       </div>
       <div
