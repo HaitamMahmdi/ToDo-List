@@ -18,18 +18,15 @@ const props = defineProps({
 const auth = getAuth(app);
 const docRef = doc(db, "Users", `User-${auth.currentUser.uid}`);
 async function RemoveTask() {
-  console.log(props.taskName);
-
   const docSnap = await getDoc(docRef);
   const taskArr = docSnap.data().Tasks;
-
   taskArr.forEach((el, index) => {
     if (props.taskName === el.taskTitle) {
       taskArr.splice(index, 1);
       updateDoc(docRef, {
         Tasks: taskArr,
       });
-      return console.log(`Taksk is removed `);
+      return console.log(`Task is removed `);
     }
   });
 }

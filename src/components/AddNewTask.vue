@@ -1,14 +1,12 @@
 <script setup>
 import { reactive, ref } from "vue";
-import { app ,db} from "../firebase";
+import MassagesCom from "./MassagesCom.vue";
+import { app, db } from "../firebase";
 import { getAuth } from "firebase/auth";
-import {
-  getDoc,
-  doc,
-  updateDoc,
-  arrayUnion,
-} from "firebase/firestore";
+import { getDoc, doc, updateDoc, arrayUnion } from "firebase/firestore";
 const auth = getAuth(app);
+const massageType = ref(null);
+const massageNum = ref(0);
 const user = auth.currentUser;
 const isChecked = ref(false);
 const task = reactive({
@@ -26,16 +24,28 @@ async function addNewTask() {
       await updateDoc(docRef, {
         Tasks: arrayUnion(task),
       });
+      massageType.value = `success`;
+      massageNum.value += 1;
+
+      console.log(massageType.value);
       console.log("Task added successfully!");
     } else {
+      massageType.value = `error`;
       console.log("Document does not exist. Consider creating it.");
     }
   } catch (error) {
+    massageType.value = `error`;
     console.error("Error fetching or updating document:", error);
   }
 }
 </script>
 <template>
+  <div class="absolute left-0 top-0 h-full p-2">
+    <MassagesCom
+      v-for="x in massageNum"
+      :MassageType="massageType"
+    ></MassagesCom>
+  </div>
   <form @submit.prevent class="flex flex-col">
     <label
       for="taskTitle"
